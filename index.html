@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syaa Store — Your Digital Solution</title>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        cream: {
+                            50: '#FDFBF7',
+                            100: '#FAF5EB',
+                            200: '#F3E9D6',
+                        },
+                        gold: {
+                            100: '#FEF3C7',
+                            200: '#FDE68A',
+                            300: '#FCD34D',
+                            400: '#FBBF24',
+                            500: '#F59E0B',
+                            600: '#D97706',
+                        },
+                        ink: {
+                            900: '#1C1917',
+                            700: '#44403C',
+                            500: '#78716C',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 7s ease-in-out 2s infinite',
+                        'pop-in': 'popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        popIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.92) translateY(8px)' },
+                            '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1C1917;
+            overflow-x: hidden;
+        }
+
+        .glass-dock {
+            background: rgba(255, 253, 249, 0.78);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 12px 32px -6px rgba(180, 140, 70, 0.14), 0 4px 12px -2px rgba(28, 25, 23, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(253, 230, 138, 0.45);
+            box-shadow: 0 8px 24px -6px rgba(120, 113, 108, 0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.96);
+            border-color: rgba(251, 191, 36, 0.75);
+            box-shadow: 0 18px 34px -8px rgba(217, 119, 6, 0.14);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bg-blob-gold {
+            background: radial-gradient(circle, rgba(253, 230, 138, 0.42) 0%, rgba(253, 251, 247, 0) 70%);
+        }
+        .bg-blob-lavender {
+            background: radial-gradient(circle, rgba(233, 213, 255, 0.35) 0%, rgba(253, 251, 247, 0) 70%);
+        }
+        .bg-blob-sage {
+            background: radial-gradient(circle, rgba(209, 250, 229, 0.35) 0%, rgba(253, 251, 247, 0) 70%);
+        }
+
+        .radial-sub-btn {
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(0px, 0px) scale(0.5);
+        }
+        .radial-open .radial-sub-btn-1 {
+            pointer-events: auto;
+            opacity: 1;
+            transform: translate(-68px, -10px) scale(1);
+        }
+        .radial-open .radial-sub-btn-2 {
+            pointer-events: auto;
+            opacity: 1;
+            transform: translate(-52px, -58px) scale(1);
+        }
+        .radial-open .radial-sub-btn-3 {
+            pointer-events: auto;
+            opacity: 1;
+            transform: translate(-4px, -74px) scale(1);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-ink-900">
+
+    <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-blob-gold animate-float"></div>
+        <div class="absolute top-1/3 -right-24 w-96 h-96 rounded-full bg-blob-lavender animate-float-delayed"></div>
+        <div class="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-blob-sage animate-float"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="pt-5 pb-3 px-4 sm:px-6 max-w-6xl mx-auto">
+        <div class="flex items-center justify-between gap-3">
+            <a href="#" onclick="resetFilters(); return false;" class="flex items-center gap-3 group focus:outline-none">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-100 via-amber-200 to-amber-300 border border-amber-300/80 shadow-md shadow-amber-500/15 flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                    <svg class="w-7 h-7" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 32L9 18L18 24L24 13L30 24L39 18L37 32H11Z" fill="#F59E0B" stroke="#92400E" stroke-width="2.2" stroke-linejoin="round"/>
+                        <rect x="11" y="34" width="26" height="4" rx="2" fill="#D97706"/>
+                        <circle cx="9" cy="16" r="2.2" fill="#FBBF24" stroke="#92400E" stroke-width="1.5"/>
+                        <circle cx="24" cy="11" r="2.5" fill="#FBBF24" stroke="#92400E" stroke-width="1.5"/>
+                        <circle cx="39" cy="16" r="2.2" fill="#FBBF24" stroke="#92400E" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="leading-tight">
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-display font-extrabold italic text-xl sm:text-2xl tracking-tight text-ink-900">Syaa Store</span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">PRO</span>
+                    </div>
+                    <p class="text-[10px] sm:text-[11px] font-semibold tracking-[0.18em] text-ink-500 uppercase">Your Digital Solution</p>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-2.5">
+                <div class="hidden md:flex items-center bg-white/80 border border-amber-200/80 rounded-2xl px-3.5 py-2 shadow-sm focus-within:border-amber-400 focus-within:ring-2 focus-within:ring-amber-200/50 transition-all w-64">
+                    <svg class="w-4 h-4 text-ink-500 mr-2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <input type="text" id="desktop-search" oninput="handleSearch(this.value)" placeholder="Cari Canva, Netflix, ChatGPT..." class="bg-transparent text-xs font-medium text-ink-900 placeholder-ink-500 focus:outline-none w-full">
+                </div>
+
+                <button onclick="toggleCart()" class="relative flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-400 hover:to-amber-500 text-ink-900 font-bold text-xs shadow-md shadow-amber-500/20 transition-all active:scale-95">
+                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                    </svg>
+                    <span class="hidden sm:inline">Keranjang</span>
+                    <span id="header-cart-badge" class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-ink-900 text-amber-300 text-[11px] font-extrabold">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- GLASSY DASHBOARD PINTASAN -->
+    <nav aria-label="Glassy Dashboard Pintasan" class="sticky top-3 z-30 px-3 sm:px-6 max-w-5xl mx-auto my-2">
+        <div class="glass-dock rounded-3xl p-2 flex items-center justify-between gap-1.5 overflow-x-auto no-scrollbar">
+            <button onclick="jumpToCategory('all')" data-dock="all" class="dock-btn active flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all bg-amber-300/90 text-ink-900 shadow-sm">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                </svg>
+                <span>Semua</span>
+            </button>
+
+            <button onclick="jumpToCategory('editing')" data-dock="editing" class="dock-btn flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-ink-700 hover:bg-amber-100/70 whitespace-nowrap transition-all">
+                <svg class="w-4 h-4 text-sky-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                </svg>
+                <span>Editing & Desain</span>
+            </button>
+
+            <button onclick="jumpToCategory('ai')" data-dock="ai" class="dock-btn flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-ink-700 hover:bg-amber-100/70 whitespace-nowrap transition-all">
+                <svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+                </svg>
+                <span>AI & Kerja</span>
+            </button>
+
+            <button onclick="jumpToCategory('streaming')" data-dock="streaming" class="dock-btn flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-ink-700 hover:bg-amber-100/70 whitespace-nowrap transition-all">
+                <svg class="w-4 h-4 text-rose-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3V9Z"/>
+                </svg>
+                <span>Streaming</span>
+            </button>
+
+            <button onclick="jumpToCategory('aset')" data-dock="aset" class="dock-btn flex items-center gap-2 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-ink-700 hover:bg-amber-100/70 whitespace-nowrap transition-all">
+                <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5" rx="1"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                </svg>
+                <span>Aset Digital</span>
+            </button>
+
+            <div class="h-5 w-px bg-amber-200/80 mx-0.5 shrink-0"></div>
+
+            <button onclick="openModal('status-modal')" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl text-xs font-semibold text-ink-700 hover:bg-purple-100/70 whitespace-nowrap transition-all">
+                <svg class="w-4 h-4 text-purple-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span>Status</span>
+            </button>
+
+            <button onclick="openModal('support-modal')" class="flex items-center gap-1.5 px-3 py-2.5 rounded-2xl text-xs font-semibold text-ink-700 hover:bg-emerald-100/70 whitespace-nowrap transition-all">
+                <svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                </svg>
+                <span>Admin WA</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="px-4 sm:px-6 pt-4 pb-6 max-w-6xl mx-auto">
+        <div class="relative rounded-[2rem] bg-gradient-to-br from-[#FFFDF9] via-[#FEF7E6] to-[#FDECC8] border border-amber-200/80 p-6 sm:p-9 shadow-xl shadow-amber-900/5 overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-amber-300/20 blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-12 -bottom-12 w-48 h-48 rounded-full bg-purple-200/25 blur-2xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ink-900 text-amber-300 text-xs font-extrabold tracking-wide shadow-sm mb-3">
+                        <span>👑 PRICELIST NOVEMBER 2026</span>
+                    </div>
+                    <h1 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink-900 tracking-tight leading-tight">
+                        Produk digital berkualitas, <span class="text-amber-600 underline decoration-amber-300 decoration-4 underline-offset-4">harga tetap bersahabat!</span>
+                    </h1>
+                    <p class="mt-3 text-sm sm:text-base text-ink-700 leading-relaxed">
+                        Upgrade akun kreatif, AI produktivitas, hingga hiburan streaming favoritmu secara instan. Pilih aplikasi, masukkan keranjang, dan order langsung ke Admin <strong>Syaa</strong> atau <strong>Jane</strong>.
+                    </p>
+
+                    <div class="mt-4 md:hidden flex items-center bg-white/90 border border-amber-300/80 rounded-2xl px-3.5 py-2.5 shadow-sm">
+                        <svg class="w-4 h-4 text-ink-500 mr-2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                        </svg>
+                        <input type="text" id="mobile-search" oninput="handleSearch(this.value)" placeholder="Cari aplikasi (misal: Canva, Netflix, Gemini)..." class="bg-transparent text-xs font-medium text-ink-900 placeholder-ink-500 focus:outline-none w-full">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5 sm:gap-3 lg:w-[360px] shrink-0">
+                    <div class="bg-white/85 backdrop-blur-sm border border-amber-200/80 rounded-2xl p-3 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-bold text-ink-900 leading-snug">Produk Original & Terpercaya</span>
+                    </div>
+
+                    <div class="bg-white/85 backdrop-blur-sm border border-amber-200/80 rounded-2xl p-3 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-bold text-ink-900 leading-snug">Proses Cepat & Mudah</span>
+                    </div>
+
+                    <div class="bg-white/85 backdrop-blur-sm border border-amber-200/80 rounded-2xl p-3 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-bold text-ink-900 leading-snug">Support Selalu Ada</span>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-amber-300 to-amber-400 border border-amber-400 rounded-2xl p-3 flex items-center gap-2.5 shadow-sm">
+                        <div class="w-9 h-9 rounded-xl bg-ink-900 text-amber-300 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <span class="text-[11px] font-extrabold text-ink-900 leading-snug">100% Aman & Terpercaya!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KATALOG UTAMA -->
+    <main id="katalog-section" class="px-4 sm:px-6 pb-28 max-w-6xl mx-auto">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div>
+                <h2 id="catalog-title" class="font-display font-extrabold text-xl sm:text-2xl text-ink-900">Semua Paket Aplikasi</h2>
+                <p id="catalog-subtitle" class="text-xs text-ink-500 mt-0.5">Menampilkan 35 pilihan paket digital terbaik November 2026</p>
+            </div>
+
+            <button id="reset-filter-btn" onclick="resetFilters()" class="hidden px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold transition-colors">
+                Reset Filter
+            </button>
+        </div>
+
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4"></div>
+
+        <div id="empty-search-state" class="hidden text-center py-14 px-4 glass-card rounded-3xl mt-4">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-3">
+                <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+            </div>
+            <h3 class="font-display font-bold text-lg text-ink-900">Produk tidak ditemukan</h3>
+            <p class="text-xs text-ink-500 mt-1 max-w-md mx-auto">Coba kata kunci lain seperti Canva, CapCut, ChatGPT, Netflix, atau klik tombol di bawah untuk melihat semua daftar harga.</p>
+            <button onclick="resetFilters()" class="mt-4 px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-500 text-ink-900 font-bold text-xs shadow-sm transition-all">
+                Tampilkan Semua Produk
+            </button>
+        </div>
+
+        <div id="produk-tambahan-banner" class="mt-8 rounded-[2rem] bg-ink-900 text-cream-50 p-6 sm:p-8 shadow-xl relative overflow-hidden">
+            <div class="absolute right-0 top-0 w-64 h-64 bg-amber-400/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div class="flex items-start sm:items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-300 to-amber-500 text-ink-900 flex items-center justify-center shrink-0 shadow-lg">
+                        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5" rx="1"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-amber-300">Produk Tambahan Spesial</span>
+                        <h3 class="font-display font-extrabold text-xl sm:text-2xl text-white mt-0.5">Paket Aset Siap Dijual Kembali</h3>
+                        <p class="text-xs text-stone-300 mt-1">Cocok untuk kreator konten, affiliate, dan pebisnis produk digital.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
+                    <div class="bg-white/10 border border-amber-300/30 rounded-2xl p-4 flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-xs font-bold text-white">30.000 Video Viral</p>
+                            <p class="text-[11px] text-amber-200">Siap Dijual Kembali</p>
+                            <p class="font-display font-extrabold text-base text-amber-300 mt-1">Rp20.000</p>
+                        </div>
+                        <button onclick="addToCart(34)" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-ink-900 font-extrabold text-xs transition-all active:scale-95 shrink-0">
+                            + Ambil
+                        </button>
+                    </div>
+
+                    <div class="bg-white/10 border border-amber-300/30 rounded-2xl p-4 flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-xs font-bold text-white">13.000 Template Canva</p>
+                            <p class="text-[11px] text-amber-200">Siap Dijual Kembali</p>
+                            <p class="font-display font-extrabold text-base text-amber-300 mt-1">Rp15.000</p>
+                        </div>
+                        <button onclick="addToCart(35)" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-ink-900 font-extrabold text-xs transition-all active:scale-95 shrink-0">
+                            + Ambil
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOMBOL RADIAL SIDEBAR KERANJANG -->
+    <div id="radial-cart-wrapper" class="fixed bottom-5 right-5 z-40">
+        <button onclick="openModal('status-modal'); toggleRadialMenu(false);" title="Status Pesanan"
+            class="radial-sub-btn radial-sub-btn-1 absolute bottom-2 right-2 w-11 h-11 rounded-full bg-white border border-purple-200 text-purple-600 shadow-lg flex items-center justify-center hover:bg-purple-50">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+        </button>
+
+        <button onclick="openModal('support-modal'); toggleRadialMenu(false);" title="Chat Admin WA"
+            class="radial-sub-btn radial-sub-btn-2 absolute bottom-2 right-2 w-11 h-11 rounded-full bg-white border border-emerald-200 text-emerald-600 shadow-lg flex items-center justify-center hover:bg-emerald-50">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+        </button>
+
+        <button onclick="scrollToTop(); toggleRadialMenu(false);" title="Ke Atas"
+            class="radial-sub-btn radial-sub-btn-3 absolute bottom-2 right-2 w-11 h-11 rounded-full bg-white border border-amber-200 text-amber-600 shadow-lg flex items-center justify-center hover:bg-amber-50">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m18 15-6-6-6 6"/>
+            </svg>
+        </button>
+
+        <div class="relative">
+            <button onclick="toggleCart()" aria-label="Buka Sidebar Keranjang"
+                class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 text-ink-900 shadow-xl shadow-amber-500/30 border-2 border-white flex items-center justify-center transition-transform duration-200 hover:scale-105 active:scale-95">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                <span id="radial-cart-badge" class="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1.5 rounded-full bg-ink-900 text-amber-300 text-[11px] font-extrabold flex items-center justify-center border-2 border-white shadow">0</span>
+            </button>
+
+            <button onclick="toggleRadialMenu()" aria-label="Menu Pintasan Radial"
+                class="absolute -bottom-1 -left-1 w-6 h-6 rounded-full bg-ink-900 text-amber-300 border-2 border-white shadow flex items-center justify-center hover:scale-110 transition-transform">
+                <svg id="radial-plus-icon" class="w-3.5 h-3.5 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR KERANJANG -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleCart()" class="absolute inset-0 bg-ink-900/40 backdrop-blur-xs transition-opacity"></div>
+        <aside class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-[#FFFDF9] shadow-2xl border-l border-amber-200/80 flex flex-col justify-between animate-pop-in">
+            <div class="p-5 border-b border-amber-100 flex items-center justify-between bg-gradient-to-r from-amber-50 to-cream-50">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-300/80 text-ink-900 flex items-center justify-center">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="font-display font-extrabold text-base text-ink-900">Keranjang Syaa Store</h2>
+                        <p class="text-[11px] text-ink-500">Order langsung via WhatsApp Admin</p>
+                    </div>
+                </div>
+                <button onclick="toggleCart()" class="w-9 h-9 rounded-xl bg-white border border-amber-200 text-ink-700 hover:bg-amber-100 flex items-center justify-center transition-colors">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
+
+            <div class="p-5 border-t border-amber-200/70 bg-cream-50/90 space-y-3.5">
+                <div>
+                    <label for="customer-contact" class="block text-[11px] font-bold text-ink-700 mb-1">
+                        No. WhatsApp / Email Tujuan Pengiriman Akun <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="customer-contact" placeholder="Contoh: 08123456789 / emailkamu@gmail.com"
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-amber-200 text-xs font-medium text-ink-900 placeholder-ink-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200/50">
+                </div>
+
+                <div class="flex items-center justify-between pt-1">
+                    <span class="text-xs font-semibold text-ink-500">Total Pembayaran</span>
+                    <span id="cart-total" class="font-display font-extrabold text-xl text-ink-900">Rp0</span>
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-[11px] font-bold text-ink-700 text-center">Pilih Admin untuk Order via WhatsApp:</p>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="processDirectOrder('syaa')" id="checkout-syaa-btn" disabled
+                            class="py-3 px-3 rounded-2xl bg-gradient-to-r from-[#25D366] to-[#1DA851] hover:from-[#1EBE5D] hover:to-[#169244] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]">
+                            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+                            </svg>
+                            <span>Order ke Syaa</span>
+                        </button>
+
+                        <button onclick="processDirectOrder('jane')" id="checkout-jane-btn" disabled
+                            class="py-3 px-3 rounded-2xl bg-gradient-to-r from-[#128C7E] to-[#0E7266] hover:from-[#0F7A6E] hover:to-[#0A5A50] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs shadow-lg shadow-teal-600/20 flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]">
+                            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+                            </svg>
+                            <span>Order ke Jane</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- MODAL UCAPAN TERIMA KASIH -->
+    <div id="thankyou-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div onclick="closeModal('thankyou-modal')" class="absolute inset-0 bg-ink-900/45 backdrop-blur-xs"></div>
+        <div class="relative z-10 w-full max-w-md rounded-3xl bg-[#FFFDF9] border border-amber-200 p-6 sm:p-7 shadow-2xl text-center animate-pop-in">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-200 via-amber-300 to-amber-400 text-ink-900 flex items-center justify-center shadow-lg shadow-amber-500/20 mb-4">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold mb-2">
+                Pesanan Berhasil Dibuat! 🎉
+            </span>
+            <h3 class="font-display font-extrabold text-2xl text-ink-900">Terima Kasih Sudah Order di Syaa Store!</h3>
+            <p class="text-xs text-ink-700 mt-2 leading-relaxed">
+                Pesananmu sedang diteruskan ke WhatsApp <strong id="ty-admin-name" class="text-ink-900">Syaa</strong>. Silakan kirim pesan otomatis yang muncul di WhatsApp agar akunmu segera diproses!
+            </p>
+
+            <div class="mt-4 p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/80 text-left text-xs space-y-1">
+                <div class="flex justify-between">
+                    <span class="text-ink-500">Kode Order:</span>
+                    <span id="ty-order-code" class="font-extrabold text-ink-900">SYA-000000</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-ink-500">Tujuan Kirim Akun:</span>
+                    <span id="ty-customer-contact" class="font-bold text-ink-900">-</span>
+                </div>
+            </div>
+
+            <div class="mt-5 grid grid-cols-2 gap-2.5">
+                <button onclick="openThankYouWhatsApp()" class="py-3 px-4 rounded-2xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs shadow-md transition-all">
+                    Buka WhatsApp Lagi
+                </button>
+                <button onclick="closeModal('thankyou-modal')" class="py-3 px-4 rounded-2xl bg-amber-300 hover:bg-amber-400 text-ink-900 font-bold text-xs transition-all">
+                    Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL STATUS -->
+    <div id="status-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div onclick="closeModal('status-modal')" class="absolute inset-0 bg-ink-900/45 backdrop-blur-xs"></div>
+        <div class="relative z-10 w-full max-w-md rounded-3xl bg-[#FFFDF9] border border-amber-200 p-6 shadow-2xl animate-pop-in">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-display font-extrabold text-lg text-ink-900">Status Pesanan Terakhir</h3>
+                <button onclick="closeModal('status-modal')" class="w-8 h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-ink-700 flex items-center justify-center">✕</button>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-semibold text-ink-500">Kode Order</span>
+                    <span id="order-code-display" class="text-xs font-extrabold text-ink-900">Belum ada pesanan</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-semibold text-ink-500">Status</span>
+                    <span id="order-status-text" class="px-2.5 py-0.5 rounded-full bg-amber-200/80 text-amber-900 text-[11px] font-bold">Menunggu Order</span>
+                </div>
+                <div id="order-summary-detail" class="pt-2 border-t border-amber-200/60 text-xs text-ink-600">
+                    Pilih produk favoritmu di katalog dan lakukan order via WhatsApp.
+                </div>
+            </div>
+
+            <div class="mt-4 flex gap-2">
+                <button id="reopen-wa-btn" onclick="openThankYouWhatsApp()" class="hidden flex-1 py-2.5 rounded-2xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs">
+                    Lanjut ke WhatsApp
+                </button>
+                <button onclick="closeModal('status-modal')" class="flex-1 py-2.5 rounded-2xl bg-ink-900 text-amber-300 font-bold text-xs">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SUPPORT ADMIN -->
+    <div id="support-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div onclick="closeModal('support-modal')" class="absolute inset-0 bg-ink-900/45 backdrop-blur-xs"></div>
+        <div class="relative z-10 w-full max-w-md rounded-3xl bg-[#FFFDF9] border border-amber-200 p-6 shadow-2xl animate-pop-in">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-display font-extrabold text-lg text-ink-900">Hubungi Admin Syaa Store</h3>
+                <button onclick="closeModal('support-modal')" class="w-8 h-8 rounded-xl bg-amber-50 hover:bg-amber-100 text-ink-700 flex items-center justify-center">✕</button>
+            </div>
+            <p class="text-xs text-ink-600 leading-relaxed mb-4">
+                Butuh bantuan pilih paket, tanya stok akun, atau klaim garansi? Langsung hubungi salah satu admin resmi kami di bawah ini:
+            </p>
+
+            <div class="space-y-2.5">
+                <a href="https://wa.me/6281392617394?text=Halo%20Admin%20Syaa%20-%20Syaa%20Store!%20Saya%20ingin%20tanya%20produk%20digitalnya%20kak%20%F0%9F%91%91" target="_blank"
+                    class="flex items-center justify-between p-3.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 transition-colors">
+                    <div>
+                        <p class="font-display font-extrabold text-sm text-ink-900">Admin Syaa</p>
+                        <p class="text-xs font-medium text-emerald-700">0813-9261-7394</p>
+                    </div>
+                    <span class="px-3.5 py-2 rounded-xl bg-[#25D366] text-white font-bold text-xs shadow-xs">Chat WA</span>
+                </a>
+
+                <a href="https://wa.me/62882003358187?text=Halo%20Admin%20Jane%20-%20Syaa%20Store!%20Saya%20ingin%20tanya%20produk%20digitalnya%20kak%20%F0%9F%91%91" target="_blank"
+                    class="flex items-center justify-between p-3.5 rounded-2xl bg-teal-50 hover:bg-teal-100/80 border border-teal-200 transition-colors">
+                    <div>
+                        <p class="font-display font-extrabold text-sm text-ink-900">Admin Jane</p>
+                        <p class="text-xs font-medium text-teal-700">0882-0033-58187</p>
+                    </div>
+                    <span class="px-3.5 py-2 rounded-xl bg-[#128C7E] text-white font-bold text-xs shadow-xs">Chat WA</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-2"></div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const WHATSAPP_ADMINS = {
+            syaa: { name: 'Syaa', number: '6281392617394', display: '0813-9261-7394' },
+            jane: { name: 'Jane', number: '62882003358187', display: '0882-0033-58187' }
+        };
+
+        function getAppLogoSVG(brand) {
+            const icons = {
+                alight: `<div class="w-10 h-10 rounded-xl bg-[#0D2129] text-[#22D3EE] flex items-center justify-center font-extrabold text-xs shrink-0">AM</div>`,
+                bstation: `<div class="w-10 h-10 rounded-xl bg-[#00A1D6] text-white flex items-center justify-center font-extrabold text-sm shrink-0">B</div>`,
+                canva: `<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C4CC] to-[#7D2AE8] text-white flex items-center justify-center font-display italic font-extrabold text-[11px] shrink-0">Canva</div>`,
+                canva_edu: `<div class="w-10 h-10 rounded-xl bg-ink-900 text-amber-300 flex items-center justify-center shrink-0"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>`,
+                capcut: `<div class="w-10 h-10 rounded-xl bg-ink-900 text-white flex items-center justify-center font-extrabold text-xs shrink-0">CC</div>`,
+                chatgpt: `<div class="w-10 h-10 rounded-xl bg-[#10A37F] text-white flex items-center justify-center font-extrabold text-xs shrink-0">GPT</div>`,
+                gemini: `<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-500 text-white flex items-center justify-center shrink-0"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg></div>`,
+                getcontact: `<div class="w-10 h-10 rounded-xl bg-[#00A8E8] text-white flex items-center justify-center font-extrabold text-xs shrink-0">GC</div>`,
+                hbo: `<div class="w-10 h-10 rounded-xl bg-[#111827] text-white flex items-center justify-center font-extrabold text-[10px] tracking-tighter shrink-0">HBO</div>`,
+                loklok: `<div class="w-10 h-10 rounded-xl bg-[#2563EB] text-amber-300 flex items-center justify-center font-extrabold text-xs shrink-0">LL</div>`,
+                meitu: `<div class="w-10 h-10 rounded-xl bg-[#F43F5E] text-white flex items-center justify-center font-extrabold text-xs shrink-0">M+</div>`,
+                netflix: `<div class="w-10 h-10 rounded-xl bg-[#141414] text-[#E50914] flex items-center justify-center font-display font-black text-base shrink-0">N</div>`,
+                prime: `<div class="w-10 h-10 rounded-xl bg-[#00A8E1] text-white flex items-center justify-center font-bold text-[10px] shrink-0">prime</div>`,
+                spotify: `<div class="w-10 h-10 rounded-xl bg-[#1DB954] text-ink-900 flex items-center justify-center shrink-0"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.6.6 0 0 1-.85.2c-2.3-1.4-5.2-1.7-8.6-.9a.6.6 0 1 1-.27-1.17c3.7-.85 6.9-.48 9.5 1.1.28.18.37.54.22.77zm1.2-2.7a.75.75 0 0 1-1.03.25c-2.6-1.6-6.6-2.1-9.7-1.15a.75.75 0 1 1-.44-1.43c3.5-1.07 7.9-.55 10.9 1.3.36.22.47.69.27 1.03zm.1-2.8C14.7 9 9.5 8.8 6.5 9.75a.9.9 0 1 1-.52-1.72c3.45-1.05 9.2-.85 12.8 1.3a.9.9 0 0 1-.88 1.57z"/></svg></div>`,
+                viu: `<div class="w-10 h-10 rounded-xl bg-[#F59E0B] text-white flex items-center justify-center font-extrabold text-xs shrink-0">viu</div>`,
+                wetv: `<div class="w-10 h-10 rounded-xl bg-gradient-to-r from-[#FF6A00] to-[#00C853] text-white flex items-center justify-center font-extrabold text-[10px] shrink-0">WeTV</div>`,
+                youtube: `<div class="w-10 h-10 rounded-xl bg-[#FF0000] text-white flex items-center justify-center shrink-0"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg></div>`,
+                zoom: `<div class="w-10 h-10 rounded-xl bg-[#2D8CFF] text-white flex items-center justify-center font-extrabold text-[10px] shrink-0">ZOOM</div>`,
+                aset: `<div class="w-10 h-10 rounded-xl bg-amber-300 text-ink-900 flex items-center justify-center font-extrabold text-xs shrink-0">🎁</div>`
+            };
+            return icons[brand] || icons.aset;
+        }
+
+        const products = [
+            { id: 1, name: 'Alight Motion', duration: '1 Tahun', price: 25000, category: 'editing', brand: 'alight', tag: 'Best Seller' },
+            { id: 2, name: 'Bstation Premium (Share)', duration: '1 Bulan', price: 26000, category: 'streaming', brand: 'bstation' },
+            { id: 3, name: 'Bstation Premium (Share)', duration: '2 Bulan', price: 40000, category: 'streaming', brand: 'bstation' },
+            { id: 4, name: 'Canva Pro', duration: '1 Bulan', price: 7000, category: 'editing', brand: 'canva', tag: 'Termurah' },
+            { id: 5, name: 'Canva Pro', duration: '1 Tahun', price: 15000, category: 'editing', brand: 'canva', tag: 'Favorit' },
+            { id: 6, name: 'Canva Brandkit', duration: '1 Bulan', price: 12000, category: 'editing', brand: 'canva' },
+            { id: 7, name: 'Canva Brandkit', duration: '1 Tahun', price: 20000, category: 'editing', brand: 'canva' },
+            { id: 8, name: 'Canva HEAD / OWNER TEAM', duration: '1 Bulan', price: 25000, category: 'editing', brand: 'canva' },
+            { id: 9, name: 'Canva Edu Lifetime', duration: 'Lifetime', price: 50000, category: 'editing', brand: 'canva_edu', tag: 'Sekali Bayar' },
+            { id: 10, name: 'CapCut Android', duration: '1 Bulan', price: 35000, category: 'editing', brand: 'capcut' },
+            { id: 11, name: 'CapCut iOS / PC', duration: '1 Bulan', price: 45000, category: 'editing', brand: 'capcut' },
+            { id: 12, name: 'ChatGPT Go', duration: '1 Bulan', price: 40000, category: 'ai', brand: 'chatgpt' },
+            { id: 13, name: 'ChatGPT Go', duration: '2 Bulan', price: 75000, category: 'ai', brand: 'chatgpt' },
+            { id: 14, name: 'Prime Video Private', duration: '1 Bulan', price: 33000, category: 'streaming', brand: 'prime' },
+            { id: 15, name: 'Spotify Premium', duration: '1 Bulan', price: 27000, category: 'streaming', brand: 'spotify' },
+            { id: 16, name: 'Viu', duration: '1 Tahun', price: 27000, category: 'streaming', brand: 'viu', tag: 'Hemat' },
+            { id: 17, name: 'ChatGPT Plus', duration: '1 Bulan', price: 55000, category: 'ai', brand: 'chatgpt', tag: 'AI Populer' },
+            { id: 18, name: 'Gemini Pro', duration: '2 Bulan', price: 50000, category: 'ai', brand: 'gemini', tag: '2 Bulan' },
+            { id: 19, name: 'Get Contact', duration: '1 Bulan', price: 27000, category: 'ai', brand: 'getcontact' },
+            { id: 20, name: 'HBO Ultimate (Sharing)', duration: '1 Bulan', price: 30000, category: 'streaming', brand: 'hbo' },
+            { id: 21, name: 'HBO Standart (Privat)', duration: '1 Bulan', price: 45000, category: 'streaming', brand: 'hbo' },
+            { id: 22, name: 'HBO Ultimate (Privat)', duration: '1 Bulan', price: 70000, category: 'streaming', brand: 'hbo' },
+            { id: 23, name: 'Loklok VIP Standar (Share)', duration: '1 Bulan', price: 40000, category: 'streaming', brand: 'loklok' },
+            { id: 24, name: 'Meitu VIP+ Android (7 Hari)', duration: '7 Hari', price: 23000, category: 'editing', brand: 'meitu' },
+            { id: 25, name: 'Meitu VIP+ Android (14 Hari)', duration: '14 Hari', price: 33000, category: 'editing', brand: 'meitu' },
+            { id: 26, name: 'Netflix 1U', duration: '1 Bulan', price: 45000, category: 'streaming', brand: 'netflix', tag: 'Anti Hold' },
+            { id: 27, name: 'Netflix 2U', duration: '1 Bulan', price: 35000, category: 'streaming', brand: 'netflix' },
+            { id: 28, name: 'Netflix Semi Private', duration: '1 Bulan', price: 55000, category: 'streaming', brand: 'netflix' },
+            { id: 29, name: 'WETV VIP Share 3U', duration: '1 Bulan', price: 32000, category: 'streaming', brand: 'wetv' },
+            { id: 30, name: 'WETV VIP Private', duration: '1 Bulan', price: 55000, category: 'streaming', brand: 'wetv' },
+            { id: 31, name: 'YouTube Premium', duration: '1 Bulan', price: 25000, category: 'streaming', brand: 'youtube', tag: 'Bebas Iklan' },
+            { id: 32, name: 'ZOOM PRO', duration: '14 Hari', price: 23000, category: 'ai', brand: 'zoom' },
+            { id: 33, name: 'ZOOM PRO', duration: '1 Bulan', price: 40000, category: 'ai', brand: 'zoom' },
+            { id: 34, name: '30.000 Video Viral Siap Dijual Kembali', duration: 'Akses Penuh', price: 20000, category: 'aset', brand: 'aset', tag: 'Siap Jual' },
+            { id: 35, name: '13.000 Template Canva Siap Dijual Kembali', duration: 'Akses Penuh', price: 15000, category: 'aset', brand: 'aset', tag: 'Siap Jual' }
+        ];
+
+        let currentCategory = 'all';
+        let currentSearch = '';
+        let cart = [];
+        let lastOrderData = null;
+        let isRadialOpen = false;
+
+        function formatRupiah(num) {
+            return 'Rp' + num.toLocaleString('id-ID');
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            const emptyState = document.getElementById('empty-search-state');
+            const subtitle = document.getElementById('catalog-subtitle');
+            const resetBtn = document.getElementById('reset-filter-btn');
+
+            const filtered = products.filter(p => {
+                const matchCat = currentCategory === 'all' || p.category === currentCategory;
+                const matchSearch = p.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                                    p.duration.toLowerCase().includes(currentSearch.toLowerCase());
+                return matchCat && matchSearch;
+            });
+
+            if (currentCategory !== 'all' || currentSearch !== '') {
+                resetBtn.classList.remove('hidden');
+            } else {
+                resetBtn.classList.add('hidden');
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                subtitle.textContent = '0 paket ditemukan';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            subtitle.textContent = `Menampilkan ${filtered.length} pilihan paket digital terbaik`;
+
+            grid.innerHTML = filtered.map(product => `
+                <div class="glass-card rounded-2xl p-4 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        ${getAppLogoSVG(product.brand)}
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <h3 class="font-display font-bold text-sm text-ink-900 truncate">${product.name}</h3>
+                                ${product.tag ? `<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">${product.tag}</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-lg bg-cream-100 text-ink-700 text-[11px] font-semibold border border-amber-200/60">
+                                    ⏱ ${product.duration}
+                                </span>
+                                <span class="font-display font-extrabold text-sm text-amber-700">
+                                    ${formatRupiah(product.price)}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="addToCart(${product.id})"
+                        class="px-3.5 py-2.5 rounded-xl bg-amber-300 hover:bg-amber-400 text-ink-900 font-extrabold text-xs shadow-xs transition-all active:scale-95 shrink-0">
+                        + Keranjang
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function jumpToCategory(category) {
+            currentCategory = category;
+
+            document.querySelectorAll('.dock-btn').forEach(btn => {
+                if (btn.dataset.dock === category) {
+                    btn.classList.add('active', 'bg-amber-300/90', 'text-ink-900', 'shadow-sm', 'font-bold');
+                    btn.classList.remove('text-ink-700', 'font-semibold');
+                } else {
+                    btn.classList.remove('active', 'bg-amber-300/90', 'text-ink-900', 'shadow-sm', 'font-bold');
+                    btn.classList.add('text-ink-700', 'font-semibold');
+                }
+            });
+
+            const titles = {
+                all: 'Semua Paket Aplikasi',
+                editing: 'Aplikasi Editing & Desain',
+                ai: 'AI & Produktivitas Kerja',
+                streaming: 'Hiburan & Streaming Premium',
+                aset: 'Paket Aset Digital Siap Jual'
+            };
+            document.getElementById('catalog-title').textContent = titles[category] || 'Semua Paket Aplikasi';
+
+            renderProducts();
+
+            const katalogEl = document.getElementById('katalog-section');
+            if (katalogEl) {
+                katalogEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function handleSearch(val) {
+            currentSearch = val.trim();
+            const dInput = document.getElementById('desktop-search');
+            const mInput = document.getElementById('mobile-search');
+            if (dInput && dInput.value !== val) dInput.value = val;
+            if (mInput && mInput.value !== val) mInput.value = val;
+            renderProducts();
+        }
+
+        function resetFilters() {
+            currentCategory = 'all';
+            currentSearch = '';
+            const dInput = document.getElementById('desktop-search');
+            const mInput = document.getElementById('mobile-search');
+            if (dInput) dInput.value = '';
+            if (mInput) mInput.value = '';
+            jumpToCategory('all');
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            updateCartUI();
+            showToast(`<b>${product.name}</b> (${product.duration}) masuk keranjang! 🛍️`);
+        }
+
+        function updateQty(productId, delta) {
+            const idx = cart.findIndex(item => item.id === productId);
+            if (idx === -1) return;
+
+            cart[idx].qty += delta;
+            if (cart[idx].qty <= 0) {
+                cart.splice(idx, 1);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total');
+            const headerBadge = document.getElementById('header-cart-badge');
+            const radialBadge = document.getElementById('radial-cart-badge');
+            const btnSyaa = document.getElementById('checkout-syaa-btn');
+            const btnJane = document.getElementById('checkout-jane-btn');
+
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            headerBadge.textContent = totalQty;
+            radialBadge.textContent = totalQty;
+            totalEl.textContent = formatRupiah(totalPrice);
+
+            const isDisabled = cart.length === 0;
+            btnSyaa.disabled = isDisabled;
+            btnJane.disabled = isDisabled;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12 px-4">
+                        <div class="w-16 h-16 rounded-3xl bg-amber-100/80 text-amber-600 flex items-center justify-center mb-3">
+                            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                            </svg>
+                        </div>
+                        <p class="font-display font-bold text-sm text-ink-900">Keranjang masih kosong</p>
+                        <p class="text-xs text-ink-500 mt-1">Pilih paket aplikasi favoritmu terlebih dahulu ya!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="p-3.5 rounded-2xl bg-white border border-amber-200/80 flex items-center justify-between gap-3 shadow-2xs">
+                    <div class="min-w-0">
+                        <p class="font-display font-bold text-xs text-ink-900 truncate">${item.name}</p>
+                        <p class="text-[11px] text-ink-500">${item.duration} • <span class="font-bold text-amber-700">${formatRupiah(item.price)}</span></p>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="updateQty(${item.id}, -1)" class="w-7 h-7 rounded-lg bg-amber-100 hover:bg-amber-200 text-ink-900 font-extrabold text-xs flex items-center justify-center">-</button>
+                        <span class="w-6 text-center text-xs font-extrabold text-ink-900">${item.qty}</span>
+                        <button onclick="updateQty(${item.id}, 1)" class="w-7 h-7 rounded-lg bg-amber-300 hover:bg-amber-400 text-ink-900 font-extrabold text-xs flex items-center justify-center">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function toggleRadialMenu(forceState) {
+            const wrapper = document.getElementById('radial-cart-wrapper');
+            const icon = document.getElementById('radial-plus-icon');
+            isRadialOpen = typeof forceState === 'boolean' ? forceState : !isRadialOpen;
+
+            if (isRadialOpen) {
+                wrapper.classList.add('radial-open');
+                icon.style.transform = 'rotate(45deg)';
+            } else {
+                wrapper.classList.remove('radial-open');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function processDirectOrder(adminKey) {
+            try {
+                if (cart.length === 0) return;
+
+                const contactInput = document.getElementById('customer-contact');
+                const contactValue = contactInput ? contactInput.value.trim() : '';
+
+                if (!contactValue) {
+                    showToast('Masukkan <b>No. WhatsApp / Email</b> untuk pengiriman akun dulu ya! 📲');
+                    if (contactInput) contactInput.focus();
+                    return;
+                }
+
+                const admin = WHATSAPP_ADMINS[adminKey] || WHATSAPP_ADMINS.syaa;
+                const orderCode = 'SYA-' + Math.floor(100000 + Math.random() * 900000);
+                const totalPaid = document.getElementById('cart-total').textContent;
+                const orderItemsText = cart.map((item, idx) =>
+                    `${idx + 1}. ${item.name} (${item.duration}) x${item.qty} = ${formatRupiah(item.price * item.qty)}`
+                ).join('\n');
+
+                const waMessage =
+`Halo *${admin.name} - Syaa Store*! 👑
+Saya ingin memesan produk digital berikut:
+
+🧾 *Kode Order:* ${orderCode}
+📲 *Tujuan Kirim Akun:* ${contactValue}
+
+🛒 *Detail Pesanan:*
+${orderItemsText}
+
+💰 *Total Pembayaran:* ${totalPaid}
+
+Mohon info metode pembayarannya ya kak. Terima kasih! 🙏`;
+
+                const encodedText = encodeURIComponent(waMessage);
+                const waUrl = `https://wa.me/${admin.number}?text=${encodedText}`;
+
+                lastOrderData = {
+                    code: orderCode,
+                    contact: contactValue,
+                    total: totalPaid,
+                    adminName: admin.name,
+                    adminNumber: admin.number,
+                    waUrl: waUrl,
+                    itemsSummary: cart.map(i => `${i.name} (${i.duration}) x${i.qty}`).join(', ')
+                };
+
+                document.getElementById('order-code-display').textContent = orderCode;
+                document.getElementById('order-status-text').textContent = `Menunggu Konfirmasi ${admin.name}`;
+                document.getElementById('order-summary-detail').innerHTML = `
+                    <p class="font-bold text-ink-900 mb-1">Admin Tujuan: ${admin.name} (${admin.display})</p>
+                    <p class="font-bold text-ink-900 mb-1">Kirim ke: ${contactValue}</p>
+                    <p class="text-ink-600 mb-1">${lastOrderData.itemsSummary}</p>
+                    <p class="font-extrabold text-amber-700">Total: ${totalPaid}</p>
+                `;
+                document.getElementById('reopen-wa-btn').classList.remove('hidden');
+
+                document.getElementById('ty-order-code').textContent = orderCode;
+                document.getElementById('ty-admin-name').textContent = admin.name;
+                document.getElementById('ty-customer-contact').textContent = contactValue;
+
+                cart = [];
+                updateCartUI();
+
+                window.open(waUrl, '_blank');
+                toggleCart();
+                openModal('thankyou-modal');
+            } catch (err) {
+                console.error('Order error:', err);
+            }
+        }
+
+        function openThankYouWhatsApp() {
+            if (lastOrderData && lastOrderData.waUrl) {
+                window.open(lastOrderData.waUrl, '_blank');
+            }
+        }
+
+        function showToast(htmlMessage) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'px-4 py-2.5 rounded-2xl bg-ink-900/95 text-cream-50 text-xs shadow-xl border border-amber-300/30 animate-pop-in';
+            toast.innerHTML = htmlMessage;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-6px)';
+                toast.style.transition = 'all 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, 2400);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
